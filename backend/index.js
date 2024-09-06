@@ -70,7 +70,8 @@ return String(maxId + 1)
 app.post('/api/persons', (request, response) => {
 const body = request.body
 console.log(request.body)
-if (!body.name || !body.num) {
+if (!body.name || !body.number) {
+    console.log(body)
     return response.status(400).json({ 
         error: 'content missing' 
     })
@@ -82,7 +83,7 @@ if (persons.some((person)=>person.name===body.name)) {
 }
 const person = {
     name: body.name,
-    num: body.num,
+    number: body.number,
     id: generateId()
 }
 
