@@ -1,0 +1,13 @@
+h2 {
+    color: rebeccapurple;
+    font-style: bold;
+    
+  }
+li {
+    font-style: italic;
+}
+.form {
+    color: black;
+    padding-top: 5px;
+    font-size: 15px;
+  }
