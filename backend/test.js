@@ -1,32 +1,36 @@
 const mongoose = require('mongoose')
 
-if (process.argv.length<3) {
-  console.log('give password as argument')
-  process.exit(1)
-}
+// if (process.argv.length<3) {
+//   console.log('give password as argument')
+//   process.exit(1)
+//}
 
-const password = process.argv[2]
-
-const url =
-  `mongodb+srv://fullstack:${password}@cluster0.o1opl.mongodb.net/?retryWrites=true&w=majority`
-
+const url = process.env.MONGODB_URI
 mongoose.set('strictQuery',false)
 
 mongoose.connect(url)
 
-const noteSchema = new mongoose.Schema({
-  content: String,
-  important: Boolean,
+const personSchema = new mongoose.Schema({
+  name: String,
+  number: String,
 })
 
-const Note = mongoose.model('Note', noteSchema)
-
-const note = new Note({
-  content: 'HTML is easy',
-  important: true,
-})
-
-note.save().then(result => {
-  console.log('note saved!')
-  mongoose.connection.close()
-})
+const Person = mongoose.model('Person', personSchema)
+if (process.argv[3]&&process.argv[4]){
+  const person = new Person({
+    name: process.argv[3],
+    name: process.argv[4]
+  })
+  person.save().then(result => {
+    console.log('person added!!')
+    mongoose.connection.close()
+  })
+}
+else{
+  Person.find({}).then(result => {
+    result.forEach(person => {
+      console.log(person)
+    })
+    mongoose.connection.close()
+  })
+}

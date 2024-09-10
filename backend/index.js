@@ -1,21 +1,35 @@
+require('dotenv').config()
 const http = require('http')
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
+const cors = require('cors')
 
+const url = process.env.MONGODB_URI;
+console.log(url)
 app.use(express.static('dist'))
 app.use(express.json())
 app.use(morgan('tiny'))
-const cors = require('cors')
 
 app.use(cors({
     origin: 'http://localhost:5173',
     optionsSuccessStatus: 200
 }))
-
 const unknownEndpoint = (request, response) => {
-response.status(404).send({ error: 'unknown endpoint' })
-}
+    response.status(404).send({ error: 'unknown endpoint' })
+    }
+
+const mongoose = require('mongoose')
+
+mongoose.set('strictQuery',false)
+mongoose.connect(url)
+
+const personSchema = new mongoose.Schema({
+    name: String,
+    number: String,
+  })
+
+const Person = mongoose.model('Person', personSchema)
 
 //app.use(requestLogger)
 let persons = [
@@ -41,8 +55,10 @@ response.send(`<p>Phone book has info for ${persons.length} people</p><br/> <p>$
 })
 
 app.get('/api/persons', (request, response) => {
-response.json(persons)
-})
+    Person.find({}).then(persons => {
+      response.json(persons)
+    })
+  })
 
 app.get('/api/persons/:id', (request, response) => {
 const person =  persons.find(person => person.id===request.params.id)
