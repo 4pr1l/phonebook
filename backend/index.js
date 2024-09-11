@@ -6,7 +6,6 @@ const app = express()
 const cors = require('cors')
 
 const url = process.env.MONGODB_URI;
-console.log(url)
 app.use(express.static('dist'))
 app.use(express.json())
 app.use(morgan('tiny'))
